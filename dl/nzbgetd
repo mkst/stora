@@ -1,0 +1,23 @@
+#!/bin/sh
+#
+# chkconfig: - 60 20
+# description: nzbgetd allows nzbget to be run as a service
+#
+. /etc/rc.d/init.d/functions
+
+case "$1" in
+        start)
+                if [ -n "`/sbin/pidof nzbget`" ]; then
+                        /usr/bin/killall nzbget 2>/dev/null
+                fi
+                /opt/bin/nzbget -c /usr/etc/nzbget.conf -D &
+        ;;
+        stop)
+                if [ -n "`/sbin/pidof nzbget`" ]; then
+                        /usr/bin/killall nzbget 2>/dev/null
+                fi
+        ;;
+        *)
+                echo "Usage: (start|stop)"
+                exit 1
+esac
