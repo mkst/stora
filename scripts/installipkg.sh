@@ -5,19 +5,28 @@
 
 # setup variables
 tmp="/tmp/"
-ipkg_location="./dl/ipkg-opt_0.99.163-10_arm.ipk"
+ipkg_location="http://ipkg.nslu2-linux.org/feeds/optware/cs08q1armel/cross/stable/ipkg-opt_0.99.163-10_arm.ipk"
 
-# extract
-tar -xzf ${ipkg_location} -C ${tmp}
-tar -xzf ${tmp}data.tar.gz -C /
+# wget
+wget -O ${tmp}ipkg.ipk ${ipkg_location}
 
-# add source
-echo "src cs08q1armel http://ipkg.nslu2-linux.org/feeds/optware/cs08q1armel/cross/stable" >> /opt/etc/ipkg.conf
+if [[ -s ${tmp}ipkg.ipk ]]; then
+  # extract
+  tar -xzf ${tmp}ipkg.ipk -C ${tmp}
+  tar -xzf ${tmp}data.tar.gz -C /
 
-# refresh sources
-/opt/bin/ipkg update
+  # add source
+  echo "src cs08q1armel http://ipkg.nslu2-linux.org/feeds/optware/cs08q1armel/cross/stable" >> /opt/etc/ipkg.conf
 
-# clean-up
-rm ${tmp}data.tar.gz
-rm ${tmp}control.tar.gz
-rm ${tmp}debian-binary
+  # refresh sources
+  /opt/bin/ipkg update
+
+  # clean-up
+  rm ${tmp}data.tar.gz
+  rm ${tmp}control.tar.gz
+  rm ${tmp}debian-binary
+  rm ${tmp}ipkg.ipk
+else
+  echo "Error: Failed to download ipkg"
+  return 1
+fi

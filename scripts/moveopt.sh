@@ -19,4 +19,5 @@ if [[ $(file /opt | grep directory) ]]; then
   ln -s /home/opt /opt
 else
   echo "Warning: /opt is already a symbolic link"
+  return 0
 fi
